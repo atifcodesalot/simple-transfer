@@ -132,7 +132,7 @@ module SimpleTransfer
   end
 
   class Sender < TCPSocket
-    @@chunk_size = 5000
+    @@chunk_size = 65535 # max packet size
 
     def initialize(host, port, logging = false)
       super(host, port)
