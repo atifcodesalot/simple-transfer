@@ -22,7 +22,8 @@ def is_valid_command(command)
 end
 
 def init_server(port)
-  myserver = Server.new(port)
+  myserver = Server.new("0.0.0.0", port)
+  puts "Server bound to: #{myserver.addr.inspect}"
   myserver.start()
 end
 

@@ -3,17 +3,15 @@ require "fileutils"
 require "time"
 
 module SimpleTransfer
+
+  @dot_cycle = ['⣾','⣽','⣻','⢿','⡿','⣟','⣯','⣷']
+
   def log_transfer(message, level = "INFO")
     Kernel.puts "[#{level}] [%s] #{message}" % Time.now.utc.iso8601
   end
 
-  def progress_bar(download, length)
-    i = (download.to_f / length.to_f * 30).to_i
-    return "[" + "❚" * i + " " * (30 - i) + "]"
-  end
-
   def log_progress(downloaded, length, filename)
-    Kernel.print "\r[TRANSFER!] Downloading #{filename}... #{downloaded}/#{length} bytes"
+    return "\r[TRANSFER!] Downloading #{filename}... #{downloaded}/#{length} bytes"
   end
 
   class Server < TCPServer
@@ -22,6 +20,7 @@ module SimpleTransfer
     def initialize(*args)
       super(*args)
       @logging = true
+      @dot_cycle = SimpleTransfer.instance_variable_get(:@dot_cycle)
     end
 
     def port()
@@ -80,6 +79,7 @@ module SimpleTransfer
     end
 
     def recv_file()
+      fk = 0
       init = handle_init()
       if not init[0]
         return init[1]
@@ -89,7 +89,8 @@ module SimpleTransfer
       while data.length < data_length
         data += recv_part(data, data_length)
         sleep(0.01)
-        log_progress(data.length, data_length, filename) if @logging
+        fk  = (fk + 1) % @dot_cycle.length
+        Kernel.print log_progress(data.length, data_length, filename) + @dot_cycle[fk]
       end
       Kernel.print "\n"
       if data.length != data_length
@@ -160,7 +161,7 @@ module SimpleTransfer
     end
 
     def send_chunk(chunk)
-      send(chunk, @@chunk_size)
+      send(chunk)
     end
 
     def initiate_exchange(package)
