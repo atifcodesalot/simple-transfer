@@ -2,6 +2,7 @@
 *.sh
 *.rbc
 makefile
+/gemfiles
 /.config
 /coverage/
 /InstalledFiles
