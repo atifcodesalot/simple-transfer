@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
     s.name      = 'simple-transfer'
-    s.version   = '1.1.4'
+    s.version   = '2.1.5'
     s.platform  = Gem::Platform::RUBY
     s.summary   = 'A gem for transfering files over your network with extreme simplicity -and fast.'
     s.description = "An extremely simple gem that relies on the TCP stack for transfer of files over a IP network.
