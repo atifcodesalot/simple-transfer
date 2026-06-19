@@ -161,7 +161,7 @@ module SimpleTransfer
     end
 
     def send_chunk(chunk)
-      send(chunk)
+      send(chunk, @@chunk_size)
     end
 
     def initiate_exchange(package)
