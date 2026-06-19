@@ -32,13 +32,13 @@ module SimpleTransfer
     end
 
     def init_transfer()
-      @conn.send("SYNC OK", 1024)
+      @conn.write("SYNC OK")
       data_length = Integer(recv_chunk()) # receive data length
       log_transfer("received data length: #{data_length}", level = "DEBUGGING") if @logging
-      @conn.send("LENGTH OK", 1024)
+      @conn.write("LENGTH OK")
       filename = recv_chunk() # receive file name
       log_transfer("received filename: #{filename}", level = "DEBUGGING") if @logging
-      @conn.send("FILENAME OK", 1024)
+      @conn.write("FILENAME OK")
       log_transfer(
         "transfer initiated for #{filename} size: #{data_length}", level = "INFO"
       ) if @logging
@@ -161,7 +161,7 @@ module SimpleTransfer
     end
 
     def send_chunk(chunk)
-      send(chunk, @@chunk_size)
+      write(chunk)
     end
 
     def initiate_exchange(package)
