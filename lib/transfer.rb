@@ -88,7 +88,6 @@ module SimpleTransfer
       data = ""
       while data.length < data_length
         data += recv_part(data, data_length)
-        sleep(0.01)
         fk  = (fk + 1) % @dot_cycle.length
         Kernel.print log_progress(data.length, data_length, filename) + @dot_cycle[fk]
       end
