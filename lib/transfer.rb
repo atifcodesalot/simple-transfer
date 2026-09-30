@@ -15,7 +15,7 @@ module SimpleTransfer
   end
 
   class Server < TCPServer
-    @@recv_size = 1024 * 30
+    @@recv_size = 65535
 
     def initialize(*args)
       super(*args)
@@ -80,6 +80,7 @@ module SimpleTransfer
 
     def recv_file()
       fk = 0
+      recvd = 0
       init = handle_init()
       if not init[0]
         return init[1]
@@ -88,8 +89,11 @@ module SimpleTransfer
       data = ""
       while data.length < data_length
         data += recv_part(data, data_length)
-        fk  = (fk + 1) % @dot_cycle.length
-        Kernel.print log_progress(data.length, data_length, filename) + @dot_cycle[fk]
+        recvd += 1
+        if recvd % 50 == 0
+          fk  = (fk + 1) % @dot_cycle.length
+          Kernel.print log_progress(data.length, data_length, filename) + @dot_cycle[fk]
+        end
       end
       Kernel.print "\n"
       if data.length != data_length
@@ -161,6 +165,11 @@ module SimpleTransfer
 
     def send_chunk(chunk)
       write(chunk)
+    end
+
+
+    def handle_filename(filename)
+      
     end
 
     def initiate_exchange(package)
